@@ -103,9 +103,7 @@
                 <configuration>
                     <mainClass>com.amadedev.sampleapi.SampleApiApplication</mainClass>
                 </configuration>
-                <goals>
-                    <goal>java</goal>
-                </goals>
+
             </plugin>
         </plugins>
     </build>
