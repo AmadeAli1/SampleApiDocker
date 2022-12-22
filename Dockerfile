@@ -2,6 +2,7 @@ FROM openjdk
 WORKDIR /app
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
-RUN mvnw dependency:resolve
+CMD ["ls"]
+RUN ./mvnw dependency:resolve
 COPY src ./src
 CMD ["./mvnw", "spring-boot:run"]
