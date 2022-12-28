@@ -4,8 +4,8 @@
 FROM maven:3.6.0-jdk-11-slim AS build
 COPY src /home/app/src
 COPY pom.xml /home/app
-RUN chmod +x mvnw
-RUN mvnw -f /home/app/pom.xml clean package
+RUN chmod +x mvn
+RUN mvn -f /home/app/pom.xml clean package
 
 #
 # Package stage
