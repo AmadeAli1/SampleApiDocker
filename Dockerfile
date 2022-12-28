@@ -1,17 +1,19 @@
 #
 # Build stage
 #
-FROM maven:3.6.0-jdk-11-slim AS build
-COPY src /home/app/src
-COPY pom.xml /home/app
-RUN chmod +x mvn
-RUN mvn -f /home/app/pom.xml clean package
+FROM amazoncorretto:17 AS build
+WORKDIR /app
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN chmod +x mvnw
+RUN ./mvnw clean package
+RUN ./mvnw install
 
 #
 # Package stage
 #
-FROM openjdk:11-jre-slim
-COPY --from=build /home/app/target/SampleApi0.0.1-SNAPSHOT.jar /usr/local/lib/main.jar
-ENV PORT = 8080
+FROM amazoncorretto:17-alpine
+COPY --from=build /app/build/libs/SampleApi-0.0.1.jar /usr/local/lib/spring-render-deploy.jar
+ENV PORT=8080
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/usr/local/lib/main.jar"]
+ENTRYPOINT ["java","-jar","-Dfile.encoding=UTF-8","/usr/local/lib/spring-render-deploy.jar"]
