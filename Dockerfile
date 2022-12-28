@@ -1,10 +1,16 @@
-FROM openjdk
-WORKDIR /app
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-COPY src ./src
-RUN chmod +x mvnw
-RUN ./mvnw clean package
-RUN ./mvnw dependency:resolve
-EXPOSE 8080
-CMD ["./mvnw", "spring-boot:run"]
+#
+# Build stage
+#
+FROM maven:3.6.0-jdk-11-slim AS build
+COPY src /home/app/src
+COPY pom.xml /home/app
+RUN mvn -f /home/app/pom.xml clean package
+
+#
+# Package stage
+#
+FROM openjdk:11-jre-slim
+COPY --from=build /home/app/target/SampleApi0.0.1-SNAPSHOT.jar /usr/local/lib/main.jar
+ENV PORT = 8080
+EXPOSE $PORT
+ENTRYPOINT ["java","-jar","/usr/local/lib/main.jar"]
